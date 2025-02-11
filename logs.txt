@@ -1,0 +1,9 @@
+on the root dir run
+  "npm run dev"  for starting node/backend server
+
+our server is on port 5005
+
+MongoDB ownwe: tahmid.karim.saad
+Project name: MERN E-Commerce
+Username : tahmidkarimsaad
+password: 2CNrC9T6rj7JdgR9

@@ -39,7 +39,7 @@ const setCookies = (res, accessToken, refreshToken) => {
   });
 };
 
-//            signup controller
+//////////////////////////////// signup controller
 export const signup = async (req, res) => {
   const { email, password, name } = req.body;
 
@@ -72,12 +72,42 @@ export const signup = async (req, res) => {
   }
 };
 
-//login controller
+//////////////////////////////  login controller
 export const login = async (req, res) => {
-  res.send("Login is called.");
+  res.send("login is called.");
 };
 
-// logout controller
+//logout controller
 export const logout = async (req, res) => {
-  res.send("logout is called.");
+  try {
+    const refreshToken = req.cookies.refreshToken;
+    if (!refreshToken) {
+      return res
+        .status(400)
+        .json({ message: "No refresh token found in cookies." });
+    }
+
+    const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const redisKey = `refreshToken:${decoded.userId}`;
+
+    // Debug: Check if the key exists before deleting
+    const storedToken = await redis.get(redisKey);
+    if (!storedToken) {
+      console.log(
+        `No refresh token found in Redis for user: ${decoded.userId}`
+      );
+    } else {
+      console.log(`Deleting token for user: ${decoded.userId}`);
+      const deleteResult = await redis.del(redisKey);
+      console.log(`Delete result: ${deleteResult}`);
+    }
+
+    res.clearCookie("accessToken");
+    res.clearCookie("refreshToken");
+
+    res.json({ message: "Logged Out Successfully." });
+  } catch (error) {
+    console.error("Error in logout:", error);
+    res.status(500).json({ message: "Server Error", error: error.message });
+  }
 };

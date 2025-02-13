@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import bcryptjs from "bcryptjs";
 
 const userSchema = new mongoose.Schema(
   {
@@ -36,9 +37,32 @@ const userSchema = new mongoose.Schema(
       default: "customer",
     },
   },
+  // createdAt and updatedAt fields will be
+  //  automatically added to the schema
   {
-    timestamps: true, // Moved to correct location
+    timestamps: true,
   }
 );
 
-export default mongoose.model("User", userSchema);
+//encrypt password before save
+
+//pre-save hoot to hash password before saving to the database
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+
+  try {
+    const salt = await bcryptjs.genSalt(10);
+    this.password = await bcryptjs.hash(this.password, salt);
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
+
+//compare passwords
+userSchema.methods.comparePassword = async function (password) {
+  return bcrypt.compare(password, this.password);
+};
+
+const User = mongoose.model("User", userSchema);
+export default User;

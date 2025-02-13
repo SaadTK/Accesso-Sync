@@ -10,6 +10,8 @@ const app = express();
 const PORT = process.env.PORT || 5010;
 // console.log(process.env.PORT);
 
+app.use(express.json()); //allows us to parse json data in the body of the request
+
 //routes
 app.use("/api/auth", authRoutes);
 

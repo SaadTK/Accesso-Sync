@@ -68,16 +68,12 @@ export const signup = async (req, res) => {
       message: "User created successfully",
     });
   } catch (error) {
+    console.error("Error in signup controller:", error.message);
     res.status(500).json({ message: error.message });
   }
 };
 
-//////////////////////////////  login controller
-export const login = async (req, res) => {
-  res.send("login is called.");
-};
-
-//logout controller
+//////////////////////////////// logout controller
 export const logout = async (req, res) => {
   try {
     const refreshToken = req.cookies.refreshToken;
@@ -107,7 +103,38 @@ export const logout = async (req, res) => {
 
     res.json({ message: "Logged Out Successfully." });
   } catch (error) {
-    console.error("Error in logout:", error);
+    console.error("Error in logout controller:", error.message);
     res.status(500).json({ message: "Server Error", error: error.message });
+  }
+};
+
+//////////////////////////////  login controller
+export const login = async (req, res) => {
+  // res.send("login is called.");
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+
+    if (user && (await user.comparePassword(password))) {
+      const { accessToken, refreshToken } = generateTokens(user._id);
+      await storeRefreshToken(user._id, refreshToken);
+      setCookies(res, accessToken, refreshToken);
+
+      res.json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      });
+    }
+    else{
+      res.status(401).json({message: "Invalid Email or Password."})
+    }
+  } catch (error) {
+    console.log(
+      "Error in loggin in controller (auth.controller.js)",
+      error.message
+    );
+    res.status(500).json({ message: error.message });
   }
 };

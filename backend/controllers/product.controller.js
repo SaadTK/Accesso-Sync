@@ -143,6 +143,7 @@ export const toggleFeaturedProduct = async (req, res) => {
     res.status(500).json({ message: "Server Error", error: error.message });
   }
 };
+// this will update the cache as the featured products are stored in the cache
 async function updateFeaturedProductCache() {
   try {
     // the lean() returns plain JS objs. instead of FUll mongoDB docs. Which improves performance.

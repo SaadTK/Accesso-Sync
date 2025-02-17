@@ -7,6 +7,7 @@ import productRoutes from "./routes/product.route.js";
 import { connectDB } from "./lib/db.js";
 import cookieParser from "cookie-parser";
 import couponsRoutes from "./routes/coupon.route.js";
+import paymentRoutes from "./routes/payment.route.js";
 // import cookieParser from "cookie-parser";
 
 dotenv.config();
@@ -23,6 +24,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/coupons", couponsRoutes);
+app.use("/api/payments", paymentRoutes);
 
 app.listen(PORT, () => {
   console.log("Server is running on http://localhost:" + PORT);

@@ -24,7 +24,23 @@ export const addToCart = async (req, res) => {
 };
 
 // get all the products for the cart
-export const getCartProducts = async (req, res) => {};
+export const getCartProducts = async (req, res) => {
+  try {
+    const products = await Prodcuct.find({ _id: { $in: req.user.cartItems } });
+
+    //add quanitity for each product
+    const cartItems = products.map((product) => {
+      const item = req.user.cartItems.find(
+        (cartItems) => cartItems.id === product.id
+      );
+      return { ...product.toJSON(), quantity: item.quantity };
+    });
+    res.json(cartItems);
+  } catch (error) {
+    console.log("Error in getCartProducts controller", error.message);
+    res.status(500).json({ message: "server error", error: error.message });
+  }
+};
 
 // remove an item from the cart
 export const removeAllFromCart = async (req, res) => {

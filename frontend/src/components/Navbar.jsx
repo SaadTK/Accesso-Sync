@@ -3,8 +3,8 @@ import { Lock, LogIn, LogOut, ShoppingCart, UserPlus } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
-  const user = true;
-  const isAdmin = true;
+  const user = false;
+  const isAdmin = false;
 
   return (
     <header className="fixed top-0 left-0 w-full bg-green-600 opacity-70 backdrop-blur-md shadow-lg z-40 transition-all duration-300 border-b border-emerald-800">
@@ -21,8 +21,8 @@ const Navbar = () => {
           {user && (
             <Link to={"/cart"} className="relative group text-white hover:text-yellow-300 transition duration-300 ease-in-out">
               <ShoppingCart className="inline-block mr-1 group-hover:text-red-400" size={20} ></ShoppingCart>
-              <span className="hidden sm:inline text-xl group-hover:text-red-400">C art</span>
-              <span className="absolute -top-3 -right-3 bg-emerald-400 text-white rounded-full px-2 py-0.5 text-xs group-hover:bg-red-400 transition duration-300 ease-in-out">
+              <span className="hidden sm:inline text-xl group-hover:text-red-400">Cart</span>
+              <span className="absolute -top-3 -left-3 bg-emerald-400 text-white rounded-full px-2 py-0.5 text-xs group-hover:bg-red-400 transition duration-300 ease-in-out">
                 3
               </span>
             </Link>
